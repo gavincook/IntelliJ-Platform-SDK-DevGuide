@@ -11,9 +11,10 @@ More details about specific development topics can be found in the Architecture 
 
 [插件开发FAQ](http://www.jetbrains.org/intellij/sdk/docs/faq.html)部分廊括了一系列关于[开放API和插件开发论坛](https://intellij-support.jetbrains.com/hc/en-us/community/topics/200366979-IntelliJ-IDEA-Open-API-and-Plugin-Development)的有代表性的讨论。
 
-One of the ways to improve the IntelliJ SDK documentation is to contribute to the project. Any kind of content including tutorials, articles about architecture or code samples that can help plugin developers is kindly welcome. Please read the Contribution Guidelines if you would like to share your knowledge.
 欢迎加入我们，完善IntelliJ SDK文档。包括指南、架构文章或者示例代码等任意能使得文档完善的地方。贡献请阅读贡献指南。
 
 如遇到不清晰的内容、过时的材料、样式问题或者其他任何不足，请及时在YouTrack进行反馈。如果在YouTrack没有找到问题的答案，请发起一个问题单。
+
+
 
 
