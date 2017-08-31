@@ -1,7 +1,7 @@
 #创建第一个插件
 这一章节文档能帮助你开始IntelliJ平台的插件开发。你可以IntelliJ IDEA社区版或商业版作为集成开发环境。两种版本都包含完全的插件开发工具。关于IDEA更详细的信息，请参考[IntelliJ IDEA帮助](https://www.jetbrains.com/idea/help/)。
 
-* 设置开发环境
+* 配置开发环境
 * 创建插件项目
 * 构建版本区间
 * 创建一个动作
