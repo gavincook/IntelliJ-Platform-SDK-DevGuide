@@ -37,6 +37,7 @@ public class TextBoxes extends AnAction {
 
 ## 在`plugin.xml`中注册交互
 在`plugin.xml`中的`<actions>`部分，增加交互的配置即可实现交互注册。如下代码示例，就会增加`Sample Menu`菜单组，并且注册点击`Sample Menu->Text Boxes`和`Sample Menu->Show Dialog menu`的交互：
+
 ![](media/15045394410086.jpg)
 
 ```xml
@@ -59,6 +60,7 @@ IntelliJ平台提供了新建交互的向导，以此来简化交互的创建。
 ###使用向导创建并注册交互
 * 在项目中，在需要生成交互类的包上的右键菜单点击`New`或者使用快捷键`Alt + Insert`。
 * 在新建菜单中，选择`Action`。
+
 ![](media/15045403131835.png)
 
 * 在新建交互对话框中，完善如下表单项并且点击OK:
@@ -68,6 +70,7 @@ IntelliJ平台提供了新建交互的向导，以此来简化交互的创建。
     - **Description**:可选项，交互的描述。IDEA的状态栏会在该交互获取焦点时，显示该描述。
     - 在**Add to Group**区域，在**Groups，Actions，Anchor**下制定交互需要添加到的组以及新增加的交互与原有的交互的相对位置。
     - 在**Keyboard Shortcuts**区域，为交互指定第一和第二快捷键，该步骤为可选。
+
 ![](media/15045407509772.png)
 IntelliJ平台会生成指定类名的`.java`文件，并且在`plugin.xml`中注册新创建的交互，在模块视图中增加一个Java文件节点并在编辑窗口在打开该Java文件。
 
