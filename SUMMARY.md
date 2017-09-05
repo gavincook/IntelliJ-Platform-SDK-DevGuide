@@ -7,6 +7,7 @@
         * [创建插件项目](basics/getting_started/creating_plugin_project.md)
         * [构建版本区间](basics/getting_started/build_number_ranges.md)
         * [交互处理](basics/getting_started/creating_an_action.md)
+        * [运行/调试插件](basics/getting_started/running_and_debugging_a_plugin.md)
 
 
 
