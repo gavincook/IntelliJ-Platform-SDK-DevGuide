@@ -9,6 +9,5 @@
         * [交互处理](basics/getting_started/creating_an_action.md)
         * [运行/调试插件](basics/getting_started/running_and_debugging_a_plugin.md)
         * [部署插件](basics/getting_started/deploying_plugin.md)
-
-
+        * [发布插件](basics/getting_started/publishing_plugin.md)
 
