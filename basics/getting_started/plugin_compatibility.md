@@ -19,6 +19,7 @@
 * `com.intellij.modules.vcs`
 * `com.intellij.modules.xml`
 * `com.intellij.modules.xdebugger`
+
 如下模块只会在特定的产品中提供：
 
 | 模块 | 产品 |
@@ -43,7 +44,9 @@ PhpStorm没有任何特有的模块依赖，但任何可以指定模块依赖`co
 </depends>
 ```
 为了使插件可以适用于所有的产品，需要确保没有使用任何IDEA特有的API。对于IDEA特有API的检查，可以通过基于RubyMine，PyCharm或者其他产品的SDK，然后使用该SDK来进行编译插件。
+
 IntelliJ插件仓库会自动基于上述规则来检测插件是否兼容其他产品，然后为对应的产品发布插件。
+
 IntelliJ平台的API和IDE自带插件会在不同的IDE版本中有所不同。如果一些会引起插件兼容性问题改变会在IntelliJ平台和插件API文档中的[不兼容调整](http://www.jetbrains.org/intellij/sdk/docs/reference_guide/api_changes_list.html)进行罗列。
 
 
