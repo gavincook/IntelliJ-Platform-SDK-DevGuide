@@ -10,6 +10,6 @@
         * [运行/调试插件](basics/getting_started/running_and_debugging_a_plugin.md)
         * [部署插件](basics/getting_started/deploying_plugin.md)
         * [发布插件](basics/getting_started/publishing_plugin.md)
-        *[发布插件](basics/getting_started/plugin_compatibility.md)
+        * [插件兼容性](basics/getting_started/plugin_compatibility.md)
 
 
