@@ -3,7 +3,7 @@
 
 ##创建插件项目：
 * 在主菜单中，选择File->New->Project打开新建项目向导。
-![](media/15042801333405.png)
+ ![New Project Wizard](img/new_project_wizard.png)
 * 选择左侧InteiilJ Platform Plugin类型
 * 点击Next
 * 输入项目名称

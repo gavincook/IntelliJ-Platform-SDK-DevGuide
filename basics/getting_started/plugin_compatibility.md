@@ -47,7 +47,7 @@ PhpStorm没有任何特有的模块依赖，但任何可以指定模块依赖`co
 
 IntelliJ插件仓库会自动基于上述规则来检测插件是否兼容其他产品，然后为对应的产品发布插件。
 
-IntelliJ平台的API和IDE自带插件会在不同的IDE版本中有所不同。如果一些会引起插件兼容性问题改变会在IntelliJ平台和插件API文档中的[不兼容调整](http://www.jetbrains.org/intellij/sdk/docs/reference_guide/api_changes_list.html)进行罗列。
+IntelliJ平台的API和IDE自带插件会在不同的IDE版本中有所不同。如果一些会引起插件兼容性问题改变会在IntelliJ平台和插件API文档中的[不兼容调整](/reference_guide/api_changes_list.md) 进行罗列。
 
 
 
