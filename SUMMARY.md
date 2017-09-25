@@ -13,7 +13,7 @@
         * [插件兼容性](basics/getting_started/plugin_compatibility.md)
         * [插件结构](basics/plugin_structure.md)
             * [插件内容](basics/plugin_structure/plugin_content.md)
-            * [Plugin Class Loaders](basics/plugin_structure/plugin_class_loaders.md)
+            * [插件类加载器](basics/plugin_structure/plugin_class_loaders.md)
             * [Plugin Components](basics/plugin_structure/plugin_components.md)
             * [Plugin Extensions and Extension Points](basics/plugin_structure/plugin_extensions_and_extension_points.md)
             * [Plugin Actions](basics/plugin_structure/plugin_actions.md)

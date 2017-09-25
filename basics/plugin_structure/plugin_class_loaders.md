@@ -1,7 +1,9 @@
 ---
 title: Plugin Class Loaders
 ---
+每个插件都会使用单独的类加载器来加载插件对应的类。这使得每个插件，对于同一个依赖可以使用不同于IDE自身或者其他插件成为可能。
+默认在插件类加载器找不到类时使用IDE主类加载器。然而，在`plugin.xml`中，可以使用`<depends>`来表示依赖一个或者多个其他插件。在该场景下，会在当前插件类加载器中找不到类时，使用依赖插件的类加载器获取。也就使得插件可以依赖其他插件的类。
 
-A separate class loader is used to load the classes of each plugin. This allows each plugin to use a different version of a library, even if the same library is used by the IDE itself or by another plugin.
+ 
 
-By default, the main IDE class loader loads classes that were not found in the plugin class loader. However, in the `plugin.xml` file, you may use the `<depends>` element to specify that a plugin depends on one or more other plugins. In this case the class loaders of those plugins will be used for classes not found in the current plugin. This allows a plugin to reference classes from other plugins.
+
