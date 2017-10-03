@@ -2,25 +2,25 @@
 title: Plugin Extensions and Extension Points
 ---
 
-The *IntelliJ Platform* provides the concept of _extensions_ and _extension points_ that allows a plugin to interact with other plugins or with the IDE itself.
+*IntelliJ平台*提供了一些列的扩展和扩展点，使得插件可以和其他插件或者IDE本身进行交互。
 
-## Extension points
+## 扩展点
 
-If you want your plugin to allow other plugins to extend its functionality, in the plugin, you must declare one or several _extension points_.  Each extension point defines a class or an interface that is allowed to access this point.
+如果你想允许其他插件集成当前插件的功能特性，那么在当前插件中，必须声明一个或多个*扩展点*。每个扩展点定义了一个类或一个接口使得可以访问该扩展点。
 
-## Extensions
+## 扩展
 
-If you want your plugin to extend the functionality of other plugins or the *IntelliJ Platform*, you must declare one or several _extensions_.
+如果你想使得你的插件继承其他插件的功能特性或者*IntelliJ平台*特性，你需要定义一个或多个 _扩展_
 
-## How to declare extensions and extension points
+## 如何声明扩展和扩展点
 
-You can declare extensions and extension points in the plugin configuration file `plugin.xml`, within the `<extensions>` and `<extensionPoints>` sections, respectively.
+可以通过在`plugin.xml`中，使用`<extensions>`和`<extensionPoints>`来分别定义扩展和扩展点。
 
-**To declare an extension point**
+**声明扩展点**
 
-In the `<extensionPoints>` section, insert a child element `<extensionPoint>` that defines the extension point name and the name of a bean class or an interface that is allowed to extend the plugin functionality in the `name`, `beanClass` and `interface` attributes, respectively.
+在`<extensionPoints>`部分，使用子元素`<extensionPoints>`来定义扩展点，使用`name`，`beanClass`，`interface`分别指定扩展点的名字，扩展点的类、扩展点的接口。
 
-To clarify this procedure, consider the following sample section of the plugin.xml file:
+下面为一个定义扩展点的示例：
 
 ```xml
 <extensionPoints>
@@ -29,12 +29,12 @@ To clarify this procedure, consider the following sample section of the plugin.x
 </extensionPoints>
 ```
 
-* The `interface` attribute sets an interface the plugin that contributes to the extension point must implement.
-* The `beanClass` attribute sets a bean class that specifies one or several properties annotated with the [@Attribute](upsource:///xml/dom-openapi/src/com/intellij/util/xml/Attribute.java) annotation.
+* `interface`属性指定扩展点必须实现的接口。
+* `beanClass`属性指定的类，其有一个或多个属性会进行注解[@Attribute](upsource:///xml/dom-openapi/src/com/intellij/util/xml/Attribute.java)标识。
 
-The plugin that contributes to the extension point will read those properties from the `plugin.xml` file.
+使用了扩展点的插件会解析`plugin.xml`中的上述配置。
 
-To clarify this, consider the following sample `MyBeanClass1` bean class used in the above `plugin.xml` file:
+如下为上述例子中的`MyBeanClass1`：
 
 ```java
 public class MyBeanClass1 extends AbstractExtensionPointBean {
@@ -54,20 +54,19 @@ public class MyBeanClass1 extends AbstractExtensionPointBean {
 }
 ```
 
-Note that to declare an extension designed to access the `MyExtensionPoint1` extension point, your `plugin.xml` file must contain the `<MyExtensionPoint1>` tag with the `key` and `implementationClass` attributes set to appropriate values (see sample below).
+定义扩展主要用于访问扩展点`MyExtensionPoint1`，在`plugin.xml`中需要包含`<MyExtensionPoint1>`标签，并设置其`key`和`implementationClass`属性（具体参见下面的示例）。
 
-**To declare an extension**
+**定义扩展**
 
-1. For the `<extensions>` element, set the `xmlns` (deprecated) or `defaultExtensionNs` attribute to one of the following values:
-    * `com.intellij`, if your plugin extends the IntelliJ Platform core functionality.
-    * `{ID of a plugin}`, if your plugin extends a functionality of another plugin.
-2. Add a new child element to the `<extensions>` element. The child element name must match the name of the extension point you want the extension to access.
-3. Depending on the type of the extension point, do one of the following:
-    * If the extension point was declared using the `interface` attribute, for newly added child element, set the `implementation` attribute to the name of the class that implements the specified interface.
-    * If the extension point was declared using the `beanClass` attribute, for newly added child element, set all attributes annotated with the [@Attribute](upsource:///xml/dom-openapi/src/com/intellij/util/xml/Attribute.java) annotations in the specified bean class.
+1. 在`<extensions>`标签，设置`xmlns`（过时）或`defaultExtensionNs`属性为下列其中的一个：
+    * 如果插件需要继承IntelliJ平台的核心特性，则配置为`com.intellij`。
+    * 如果插件需要继承其他插件的特性，则配置为`{插件ID}`。
+2. 在`<extensions>`中添加子标签，子标签的名字必须和需要访问的扩展点的名字一致。
+3. 访问扩展点时，使用如下方式：
+    * 如果扩展点使用`interface`属性进行声明时，设置`implementation`属性为实现该接口的实现类。
+    * 如果扩展点使用`beanClass`方式定义，那么对于`beanClass`中所有的带有[@Attribute](upsource:///xml/dom-openapi/src/com/intellij/util/xml/Attribute.java)注解的属性进行设值。
 
-To clarify this procedure, consider the following sample section of the `plugin.xml` file that defines two extensions designed to access the `appStarter` and `applicationConfigurable` extension points in the *IntelliJ Platform* and one extension to access the `MyExtensionPoint1` extension point in a test plugin:
-
+如下示例，在`plugin.xml`中定义了两个扩展，第一个用于访问`appStarter`和`applicationConfigurable`IntelliJ平台的扩展点；第二个用于访问测试插件的`MyExtensionPoint1`扩展。
 ```xml
 <!-- Declare extensions to access extension points in the IntelliJ Platform.
      These extension points have been declared using the "interface" attribute.
@@ -85,14 +84,17 @@ To clarify this procedure, consider the following sample section of the `plugin.
   </extensions>
 ```
 
-## How to get the extension points list?
+## 如何获取插件扩展点列表？
 
-To get a list of extension points available in the *IntelliJ Platform* core, consult the `<extensionPoints>` section of the following XML configuration files:
+获取*IntelliJ平台*的可用扩展点，参考如下的xml配置文件的`<extensionPoints>`部分：
 
 * [`LangExtensionPoints.xml`](upsource:///platform/platform-resources/src/META-INF/LangExtensionPoints.xml)
 * [`PlatformExtensionPoints.xml`](upsource:///platform/platform-resources/src/META-INF/PlatformExtensionPoints.xml)
 * [`VcsExtensionPoints.xml`](upsource:///platform/platform-resources/src/META-INF/VcsExtensionPoints.xml)
 
-## Additional Information and Samples
+## 附加信息和示例
 
-For samples plugins and detailed instructions on how to create your plugin that contributes to the IDEA core, refer to Customizing the IDEA Settings Dialog and Creation of Tool Windows.
+对于如何为IDEA创建插件的示例和详细说明，参考自定义IDEA配置对话框和Tool Windows的创建。
+
+
+
