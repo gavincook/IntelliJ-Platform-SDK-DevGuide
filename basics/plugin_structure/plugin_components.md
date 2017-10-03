@@ -1,129 +1,125 @@
 ---
 title: Plugin Components
 ---
+组件是插件组成的基本单位。有如下三种类型组件：
 
-Components are the fundamental concept of plugin integration. There are three kinds of components:
+* **应用级别组件**：随IDE启动而创建和初始化。可以从[Application](upsource:///platform/core-api/src/com/intellij/openapi/application/Application.java)实例中通过`getComponent(Class)`获取。
+* **项目级别组件**：会为IDE中不同的[Project](upsource:///platform/core-api/src/com/intellij/openapi/project/Project.java)创建对应的组件实例。可使用`Project`实例的`getComponent(Class)`方法获取。
+* **模块级别组件** ：会为项目中不同 [`Module`](upsource:///platform/core-api/src/com/intellij/openapi/module/Module.java)创建对应的组件实例。可通过`Module`实例的`getComponent(Class)`来获取。
 
-* **Application level components** are created and initialized when your IDE starts up. They can be acquired from the [Application](upsource:///platform/core-api/src/com/intellij/openapi/application/Application.java) instance by using the `getComponent(Class)` method.
-* **Project level components** are created for each [`Project`](upsource:///platform/core-api/src/com/intellij/openapi/project/Project.java) instance in the IDE. (Please note that components may be created even for unopened projects.) They can be acquired from the `Project` instance by using the `getComponent(Class)` method.
-* **Module level components** are created for each [`Module`](upsource:///platform/core-api/src/com/intellij/openapi/module/Module.java) inside every project loaded in the IDE.
-Module level components can be acquired from a `Module` instance with the `getComponent(Class)` method.
+在配置文件中，应为每个组件配置接口和实现类。接口类用于从其他组件获取当前组件使用，实现类则用于实例化当前组件。
+注意：对于相同级别的两个组件（[应用级别](upsource:///platform/core-api/src/com/intellij/openapi/application/Application.java), [项目级别](upsource:///platform/core-api/src/com/intellij/openapi/project/Project.java) 或 [模块级别](upsource:///platform/core-api/src/com/intellij/openapi/module/Module.java)）不能使用同一个接口类。否则这两个组件会使用同一个接口和实现类。
 
-Every component should have interface and implementation classes specified in the configuration file. The interface class will be used for retrieving the component from other components, and the implementation class will be used for component instantiation.
+组件名字为`getComponentName()`返回的字符，其具有唯一性，并用于外部扩展或者内部使用。
 
-Note that two components of the same level ([Application](upsource:///platform/core-api/src/com/intellij/openapi/application/Application.java), [Project](upsource:///platform/core-api/src/com/intellij/openapi/project/Project.java) or [Module](upsource:///platform/core-api/src/com/intellij/openapi/module/Module.java)) cannot have the same interface class. The same class may be specified for both interface and Implementation.
 
-Each component has a unique name which is used for its externalization and other internal needs. The name of a component is returned by its `getComponentName()` method.
+## 组件命名规范
+推荐使用`插件名.组件名`规范进行组件命名。
 
-## Components naming notation
 
-It is recommended to name components in the form `<plugin_name>.<component_name>`.
+## 应用级别组件
+应用级别组件实现类推荐实现[ApplicationComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/ApplicationComponent.java) 接口。
 
-## Application level components
+如果一个应用级别组件没有任何依赖，则其应该有一个无参构造函数，用于组件初始化。如果依赖其他组件，则可以在构造函数的参数中指定需要依赖组件。*IntelliJ平台*会保证组件以正确的顺序进行初始化，来实现组件的依赖关系。
 
-Optionally, an application level component's implementation class may implement the [ApplicationComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/ApplicationComponent.java) interface.
+应用级别组件必须在`plugin.xml`中的`<application-components>`部分进行注册（参见：[插件配置](plugin_configuration_file.md)）。
 
-An application component that has no dependencies should have a constructor with no parameters which will be used for its instantiation. If an application component depends on other application components, it can specify these components as constructor parameters. The *IntelliJ Platform* will ensure that the components are instantiated in the correct order to satisfy the dependencies.
+### 快速创建应用级别组件
 
-Note that application level components must be registered in the `<application-components>` section of the plugin.xml file (see [Plugin Configuration File](plugin_configuration_file.md)).
+*IntelliJ平台*提供了简单的创建应用组件的方式，而无需关心底层基础结构。
 
-### Quick creation of application components
+IntelliJ平台会帮助定义组件实现类并自动在`plugin.xml`中的 `<application-components>`部分进行注册。
 
-The *IntelliJ Platform* suggests a simplified way to create application components, with all the required infrastructure.
+**创建并注册应用级别组件:**
 
-The IntelliJ Platform interface will help you declare the application component's implementation class, and will automatically make appropriate changes to the `<application-components>` section of the `plugin.xml` file.
+1. 在项目中需要创建应用实现类的包上右键点击，并选择*New*（或者使用快捷键：<kbd>Alt</kbd>+<kbd>Insert</kbd>）。
+2. 在*New*的子菜单中，点击*Application Component*。
+3. 在*New Application Component*对话框中，输入组件名字并点击*OK*。
 
-**To create and register an application component:**
+*IntelliJ平台*会生成一个实现于接口[ApplicationComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/ApplicationComponent.java)的类。并在`plugin.xml`中进行注册，接着刷新模块视图，在编辑器中打开该类。
 
-1. In your project, open the context menu of the destination package and click *New* (or press <kbd>Alt</kbd>+<kbd>Insert</kbd>).
-2. In the *New* menu, click *Application Component*.
-3. In the *New Application Component* dialog box that opens, enter the application component name, and then click *OK*.
+## 项目级别组件
 
-The *IntelliJ Platform* will generate a new Java class that implements the [ApplicationComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/ApplicationComponent.java) interface. First register the newly created component in the `plugin.xml` file, then add a node to the module tree view; and open the created application component class file in the editor.
+项目级别的组件推荐实现[ProjectComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/ProjectComponent.java)接口。
 
-## Project level components
+项目级别组件可以通过构造入参获得[项目](upsource:///platform/core-api/src/com/intellij/openapi/project/Project.java)实例引用。也可以通过构造入参依赖其他应用级别或项目级别组件。
 
-A project level component's implementation class may implement the [ProjectComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/ProjectComponent.java) interface.
+注意：项目级别组件必须在`plugin.xml`中的`<project-components>`部分进行配置（参见：[插件配置文件](plugin_configuration_file.md)）。
 
-The constructor of a project level component can have a parameter of the [Project](upsource:///platform/core-api/src/com/intellij/openapi/project/Project.java) type, if it needs the project instance.  It can also specify other application-level or project-level components as parameters, if it depends on those components.
+### 快速创建项目级别组件
 
-Note that project level components must be registered in the `<project-components>` section of the `plugin.xml` file (see [Plugin Configuration File](plugin_configuration_file.md)).
+*IntelliJ平台*提供了简单的创建项目组件的方式，而无需关心底层基础结构。
 
-### Quick creation of project components
+IDEA界面会帮助定义组件实现类并自动在`plugin.xml`中的 `<<project-components>>`部分进行注册。
 
- <!--TODO Link to demo source code -->
-The *IntelliJ Platform* suggests a simplified way to create project components, with all the required infrastructure.
+**创建并注册项目级别组件**
 
-The IDEA interface will help you declare the project component's implementation class, and will automatically make appropriate changes to the `<project-components>` section of the `plugin.xml` file.
+1. 在项目中，需要创建组件的包上点击右键，然后在弹出菜单点击*New* (或者使用快捷键 <kbd>Alt</kbd>+<kbd>Insert</kbd>)。
+2. 在*New*子菜单，点击*Project Component*。
+3. 在*New Project Component* 对话框，输入组件名称，然后点击*OK*。
 
-**To create and register a project component**
+*IntelliJ平台*会生成一个实现于接口[ProjectComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/ProjectComponent.java) 的类。并在`plugin.xml`中进行注册，接着刷新模块视图，在编辑器中打开该类。
 
-1. In your project, open the context menu of the destination package and click *New* (or press <kbd>Alt</kbd>+<kbd>Insert</kbd>).
-2. In the *New* menu, click *Project Component*.
-3. In the *New Project Component* dialog box that opens, enter the project component name, and then click *OK*.
+## 模块级别组件
 
-The *IntelliJ Platform* will generate a new Java class that implements the [ProjectComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/ProjectComponent.java) interface; register the newly created component in the `plugin.xml` file; add a node to the module tree view; and open the created application component class file in the editor.
+模块级别的组件推荐实现[ModuleComponent](upsource:///platform/core-api/src/com/intellij/openapi/module/ModuleComponent.java)接口。
 
-## Module level components
+模块级别组件可以通过构造入参获得模块实例引用。也可以通过构造入参依赖其他应用级别、项目级别或模块级别组件。
 
-Optionally, a module level component's implementation class may implement the [ModuleComponent](upsource:///platform/core-api/src/com/intellij/openapi/module/ModuleComponent.java) interface.
+注意：项目级别组件必须在`plugin.xml`中的`<module-components>`部分进行配置（参见：[插件配置文件](plugin_configuration_file.md)）。
 
-The constructor of a module level component can have a parameter of the Module type, if it needs the module instance. It can also specify other application level, project level or module level components as parameters, if it depends on those components.
+### 快速创建模块级别组件
 
-Note that module level components must be registered in the `<module-components>` section of the `plugin.xml` file (see [Plugin Configuration File](plugin_configuration_file.md)).
+*IntelliJ平台*提供了简单的创建项目组件的方式，而无需关心底层基础结构。
 
-### Quick creation of module components
+IDEA界面会帮助定义组件实现类并自动在`plugin.xml`中的 `<module-components>`部分进行注册。
 
-The *IntelliJ Platform* suggests a simplified way to create module components, with all the required infrastructure.
+**创建并注册项目级别组件**
 
-The IDEA interface will help you declare the module component's implementation class, and will automatically make appropriate changes to the `<module-components>` section of the `plugin.xml` file.
+1. 在项目中，需要创建组件的包上点击右键，然后在弹出菜单点击*New* (或者使用快捷键 <kbd>Alt</kbd>+<kbd>Insert</kbd>)。
+2. 在*New*子菜单，点击*Module Component*。
+3. 在*New Module Component* 对话框，输入组件名称，然后点击*OK*。
 
-*To create and register a module component*
+*IntelliJ平台*会生成一个实现于接口[ModuleComponent](upsource:///platform/core-api/src/com/intellij/openapi/module/ModuleComponent.java) 的类。并在`plugin.xml`中进行注册，接着刷新模块视图，在编辑器中打开该类。
 
-1. In your project, open the context menu of the destination package and click *New* (or press <kbd>Alt</kbd>+<kbd>Insert</kbd>).
-2. In the *New* menu, click *Module Component*.
-3. In the *New Module Component* dialog box that opens, enter the module component name, and then click *OK*.
+## 保存组件状态
+如果组件实现了[JDOMExternalizable](upsource:///platform/util/src/com/intellij/openapi/util/JDOMExternalizable.java) (过时)或[PersistentStateComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/PersistentStateComponent.java)接口，那么其状态都会自动保存和加载。
 
-The *IntelliJ Platform* will generate a new Java class that implements the [ModuleComponent](upsource:///platform/core-api/src/com/intellij/openapi/module/ModuleComponent.java) interface; register the newly created component in the `plugin.xml` file; add a node to the module tree view; and open the created application component class file in the editor.
+当组件实现了 [PersistentStateComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/PersistentStateComponent.java) 接口，用[@State](upsource:///platform/projectModel-api/src/com/intellij/openapi/components/State.java) 和 [@Storage](upsource:///platform/projectModel-api/src/com/intellij/openapi/components/Storage.java) 标示的状态会会存储到xml文件中。
 
-## Persisting the state of components
+当组件实现[JDOMExternalizable](upsource:///platform/util/src/com/intellij/openapi/util/JDOMExternalizable.java)接口，组件会将状态存储到如下文件中：
 
-The state of every component will be automatically saved and loaded if the component's class implements the [JDOMExternalizable](upsource:///platform/util/src/com/intellij/openapi/util/JDOMExternalizable.java) (deprecated) or [PersistentStateComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/PersistentStateComponent.java) interface.
+* 项目级别的组件存储到项目文件中（`.ipr`文件）。
+    
+  然而，如果在`plugin.xml`中将组件的workspace选项置为`ture`，则该组件的配置信息存储到工作区间文件（`.iws`）中。
+  
+* 模块级别的组件存储组件状态到模块文件（`.iws`）中。
 
-When the component's class implements the [PersistentStateComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/PersistentStateComponent.java) interface, the component state is saved in an XML file that you can specify using the [@State](upsource:///platform/projectModel-api/src/com/intellij/openapi/components/State.java) and [@Storage](upsource:///platform/projectModel-api/src/com/intellij/openapi/components/Storage.java) annotations in your Java code.
+更多的信息和示例，参见[持久化组件状态](/basics/persisting_state_of_components.md)。
 
-When the component's class implements the [JDOMExternalizable](upsource:///platform/util/src/com/intellij/openapi/util/JDOMExternalizable.java) interface, the components save their state in the following files:
+## 默认值
 
-* Project level components save their state to the project (`.ipr`) file.
- 
-  However, if the workspace option in the `plugin.xml` file is set to `true`, the component saves its configuration to the workspace (`.iws`) file instead.
+组件的默认值（预定义的配置）会存放在`<component_name>.xml`中。将该配置文件放到插件的classpath下的默认包路径文件夹中。当解析配置中的`<component>`标签时会调用`readExternal()`方法。
 
-* Module level components save their state to the module (`.iml`) file.
+当组件有默认值时，`readExternal()`方法会调用两次：
 
-For more information and samples, refer to [Persisting State of Components](/basics/persisting_state_of_components.md).
+* 第一次加载默认值
+* 第二次加载存储的配置
 
-## Defaults
+## 插件组件生命周期
 
-The defaults (a component's predefined settings) should be placed in the `<component_name>.xml` file. Place this file in the plugin's classpath in the folder corresponding to the default package. The `readExternal()` method will be called on the `<component>` root tag.
+组件按照如下顺序进行加载：
 
-If a component has defaults, the `readExternal()` method is called twice:
+* 创建 - 调用构造方法
+* 初始化 - 如果组件实现[ApplicationComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/ApplicationComponent.java)接口，则调用`initComponent`方法
+* 配置 - 如果组件实现[JDOMExternalizable](upsource:///platform/util/src/com/intellij/openapi/util/JDOMExternalizable.java)接口，则调用其`readExternal`方法；如果组件实现[PersistentStateComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/PersistentStateComponent.java)接口，则调用`loadState`方法，此方式下组件没有默认值。
+* 对于模块级别组件，基于接口 [ModuleComponent](upsource:///platform/core-api/src/com/intellij/openapi/module/ModuleComponent.java) 的组件，会调用其`moduleAdded`方法，用于通知模块已经添加到了项目中。
+* 对于项目级别组件，基于接口[ProjectComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/ProjectComponent.java)的组件，会调用`projectOpened`来触发项目加载完成事件。
 
-* The first time for defaults
-* The second time for saved configuration
+组件按照如下顺序进行卸载：
 
-## Plugin components lifecycle
+* 保存配置 - 如果组件实现了[JDOMExternalizable](upsource:///platform/util/src/com/intellij/openapi/util/JDOMExternalizable.java)接口，则调用组件的`writeExternal`方法；如果实现PersistentStateComponent接口，则调用其`getState`方法。
+* 清理 - 调用组件的`disposeComponent`方法
 
-The components are loaded in the following order:
+注意：不应该再组件的构造方法中使用`getComponent`来依赖其他组件，否则会得到一个异常断言。如果需要在组件初始化时，依赖其他组件，则可以通过构造函数参数或者在`initComponent`中访问其他组件。
 
-* Creation - constructor is invoked.
-* Initialization - the `initComponent` method is invoked (if the component implements the [ApplicationComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/ApplicationComponent.java) interface).
-* Configuration - the `readExternal` method is invoked (if the component implements [JDOMExternalizable](upsource:///platform/util/src/com/intellij/openapi/util/JDOMExternalizable.java) interface), or the `loadState` method is invoked (if the component implements [PersistentStateComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/PersistentStateComponent.java) and has non-default persisted state).
-* For module components, the `moduleAdded` method of the [ModuleComponent](upsource:///platform/core-api/src/com/intellij/openapi/module/ModuleComponent.java) interface is invoked to notify that a module has been added to the project.
-* For project components, the `projectOpened` method of the [ProjectComponent](upsource:///platform/core-api/src/com/intellij/openapi/components/ProjectComponent.java) interface is invoked to notify that a project has been loaded.
-
-The components are unloaded in the following order:
-
-* Saving configuration - the `writeExternal` method is invoked (if the component implements the [JDOMExternalizable](upsource:///platform/util/src/com/intellij/openapi/util/JDOMExternalizable.java) interface), or the `getState` method is invoked (if the component implements PersistentStateComponent).
-* Disposal - the `disposeComponent` method is invoked.
-
-Note that you should not request any other components using the `getComponent()` method in the constructor of your component, otherwise you'll get an assertion. If you need access to other components when initializing your component, you can specify them as constructor parameters or access them in the `initComponent` method.
