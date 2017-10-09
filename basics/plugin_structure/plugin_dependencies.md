@@ -2,17 +2,17 @@
 title: Plugin Dependencies
 ---
 
-In your plugin, you may depend on classes from other plugins, either bundled, third-party or your own. In order to do so, you need to perform the following two steps:
+某些场景下，插件需要依赖其他插件、三方依赖或自定义依赖。为了引入这些依赖，需要如下两步：
 
-* Add the jars of the plugin you're depending on to the classpath of your *IntelliJ Platform SDK*.
+* 将需要依赖的jar包，放到*IntelliJ平台SDK*的classpath中。
 
-    > **warning** Do not add the plugin jars as a library: this will fail at runtime because IntelliJ Platform will load two separate copies of the dependency plugin classes.
-
-* Add a `<depends>` tag to your plugin.xml, adding the ID of the plugin you're depending on as the contents of the tag.
-For example:
-
+    > **警告**不要将依赖的插件jar添加到lib中：这样会导致IntelliJ平台加载两次插件依赖，而出现运行异常。
+    
+* 在plugin.xml中添加`<depends>`标签，在内容中添加需要依赖的插件ID。比如：
 ```xml
 <depends>org.jetbrains.idea.maven</depends>
 ```
 
-To find out the ID of the plugin you're depending on, locate the `META-INF/plugin.xml` file inside its jar and check the contents of the `<id>` tag.
+可通过插件jar包中的`META-INF/plugin.xml`文件中的`<id>`标签，来获取插件标识。
+
+

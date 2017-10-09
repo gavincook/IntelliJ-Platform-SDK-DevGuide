@@ -87,10 +87,7 @@ title: Plugin Configuration File - plugin.xml
   </actions>
 
   <!-- 扩展点。其他插件可以通过扩展点访问当前插件资源。“beanClass”属性指定可以使用该扩展点的类。
-       Extension points are registered by a plugin so that other
-       plugins can provide this plugin with certain data. The
-       "beanClass" attribute specifies the class the implementations
-       of which can be used for the extension point. -->
+        -->
   <extensionPoints>
     <extensionPoint name="testExtensionPoint" beanClass="com.foo.impl.MyExtensionBean"/>
   </extensionPoints>
