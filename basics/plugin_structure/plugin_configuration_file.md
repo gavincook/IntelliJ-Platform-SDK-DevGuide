@@ -1,106 +1,92 @@
 ---
 title: Plugin Configuration File - plugin.xml
 ---
-
-The following is a sample plugin configuration file. This sample showcases and describes all elements that can be used in the plugin.xml file.
+下面为一个陈列了所有可以在配置文件使用的元素的示例配置文件。
 
 ```xml
-<!-- url="" specifies the URL of the plugin homepage (displayed in the Welcome Screen and in "Plugins" settings dialog) -->
+<!-- url="" 指定插件主页（会显示在欢迎页和插件配置对话框中） -->
 <idea-plugin url="http://www.jetbrains.com/idea">
 
-  <!-- Plugin name -->
+  <!-- 插件名称 -->
   <name>VssIntegration</name>
 
-  <!-- Unique identifier of the plugin.
-       Cannot be changed between the plugin versions.
-       If not specified, assumed to be equal to <name>. -->
+  <!-- 插件的唯一标识符。
+       插件的不同版本不能有不同的标识符。
+       如果未指定标识符，则使用名称为标识符值。 -->
   <id>VssIntegration</id>
 
-  <!-- Description of the plugin. -->
+  <!-- 插件描述 -->
   <description>Vss integration plugin</description>
 
-  <!-- Description of changes in the latest version of the plugin.
-       Displayed in the "Plugins" settings dialog and in the
-       plugin repository Web interface. -->
+  <!-- 插件最新版本的变更描述。
+       会显示到插件的配置对话框和web的插件界面。 -->
   <change-notes>Initial release of the plugin.</change-notes>
 
-  <!-- Plugin version -->
+  <!-- 插件版本 -->
   <version>1.0</version>
 
-  <!-- The vendor of the plugin.
-       The optional "url" attribute specifies the URL of the vendor homepage.
-       The optional "email" attribute specifies the e-mail address of the vendor.
-       The optional "logo" attribute specifies the path within the plugin JAR
-       to a 16x16 icon to be displayed next to the plugin name in the welcome screen.   -->
+  <!-- 插件厂商。
+       通过url属性指定厂商的主页，可选。
+       通过email属性指定厂商的邮箱，可选。
+       通过logo指定插件的图标路径，需要为16*16尺寸。该logo会显示到欢迎界面。 -->
   <vendor url="http://www.jetbrains.com" email="support@jetbrains.com" logo="icons/plugin.png">Foo Inc.</vendor>
 
-  <!-- The unique identifiers of the plugins on which this plugin depends. -->
+  <!-- 依赖的插件的标识符 -->
   <depends>MyFirstPlugin</depends>
 
-  <!-- Optional dependency on another plugin.
-       If the plugin with the "MySecondPlugin" ID is installed,
-       the contents of mysecondplugin.xml (the format of this file
-       conforms to the format of plugin.xml) will be loaded. -->
+  <!-- 非必须的插件依赖。
+       如果插件"MySecondPlugin"已经安装，则mysecondplugin.xml（符合plugin.xml格式的配置）就会被加载。 -->
   <depends optional="true" config-file="mysecondplugin.xml">MySecondPlugin</depends>
 
-  <!-- Allows a plugin to integrate its help system (in JavaHelp format)
-       with the IDEA help system. The "file" attribute specifies the name
-       of the JAR file in the "help" subdirectory of the plugin directory.
-       The "path" attribute specifies the name of the helpset file within
-       the JAR file.-->
+  <!-- 允许插件将帮助文档（JavaHelp格式）集成到IDEA的帮助系统中。“file”属性指定插件目录中的help子目录下的jar名称。“path”属性指定jar包内的helpset名称。-->
   <helpset file="myhelp.jar" path="/Help.hs" />
 
-  <!-- Minimum and maximum build of IDEA compatible with the plugin -->
+  <!-- 可兼容的IDEA最大最小版本 -->
   <idea-version since-build="3000" until-build="3999"/>
 
-  <!-- Resource bundle from which the text of plugin descriptions,
-       action names and etc. will be loaded -->
+  <!-- 需要加载的资源文件，可用于插件描述、交互名称等。-->
   <resource-bundle>messages.MyPluginBundle</resource-bundle>
 
-  <!-- Plugin's application components -->
+  <!-- 应用级别组件 -->
   <application-components>
     <component>
-      <!-- Component's interface class -->
+      <!-- 组件接口 -->
       <interface-class>com.foo.Component1Interface</interface-class>
 
-      <!-- Component's implementation class -->
+      <!-- 组件实现类-->
       <implementation-class>com.foo.impl.Component1Impl</implementation-class>
     </component>
   </application-components>
 
-  <!-- Plugin's project components -->
+  <!-- 项目级别组件 -->
   <project-components>
     <component>
-      <!-- Interface and implementation classes are the same -->
+      <!-- 未指定接口，则组件和接口的实现类相同 -->
       <interface-class>com.foo.Component2</interface-class>
 
-      <!-- If the "workspace" option is set "true", the component
-           saves its state to the .iws file instead of the .ipr file.
-           Note that the <option> element is used only if the component
-           implements the JDOMExternalizable interface. Otherwise, the
-           use of the <option> element takes no effect.  -->
+      <!-- 如果“workspace”属性设为“true”，则组件将状态存储到.iws文件中，而不是.ipr中。注意：只有组件基于JDOMExternalizable接口，<option>配置才生效。否则<option>配置无效。-->
       <option name="workspace" value="true" />
 
-      <!-- If the "loadForDefaultProject" tag is present, the project component is instantiated also for the default project. -->
+      <!-- "loadForDefaultProject"标签表示项目级别组件会为默认项目加载。 -->
       <loadForDefaultProject>
     </component>
   </project-components>
 
-  <!-- Plugin's module components -->
+  <!-- 模块级别组件 -->
   <module-components>
     <component>
       <interface-class>com.foo.Component3</interface-class>
     </component>
   </module-components>
 
-  <!-- Actions -->
+  <!-- 交互 -->
   <actions>
     <action id="VssIntegration.GarbageCollection" class="com.foo.impl.CollectGarbage" text="Collect _Garbage" description="Run garbage collector">
       <keyboard-shortcut first-keystroke="control alt G" second-keystroke="C" keymap="$default"/>
     </action>
   </actions>
 
-  <!-- Extension points defined by the plugin.
+  <!-- 扩展点。其他插件可以通过扩展点访问当前插件资源。“beanClass”属性指定可以使用该扩展点的类。
        Extension points are registered by a plugin so that other
        plugins can provide this plugin with certain data. The
        "beanClass" attribute specifies the class the implementations
@@ -109,17 +95,11 @@ The following is a sample plugin configuration file. This sample showcases and d
     <extensionPoint name="testExtensionPoint" beanClass="com.foo.impl.MyExtensionBean"/>
   </extensionPoints>
 
-  <!-- Extensions which the plugin adds to extension points
-       defined by the IDEA core or by other plugins.
-       The "defaultExtensionNs " attribute must be set to the
-       ID of the plugin defining the extension point, or to 
-       "com.intellij" if the extension point is defined by the
-       IDEA core. The name of the tag within the <extensions>
-       tag matches the name of the extension point, and the
-       "implementation" class specifies the name of the class
-       added to the extension point. -->
+  <!-- 扩展可以访问IDEA或者其他插件提供的扩展点。“defaultExtensionNs”属性设置为定义扩展点的插件ID，若使用IDEA核心扩展点，设置为“com.intellij”。“<extensions>”标签类的元素必须为扩展点的名称，“implementation”为访问扩展点的类名称。 -->
   <extensions xmlns="VssIntegration">
     <testExtensionPoint implementation="com.foo.impl.MyExtensionImpl"/>
   </extensions>
 </idea-plugin>
 ```
+
+

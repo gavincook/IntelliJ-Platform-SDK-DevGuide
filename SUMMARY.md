@@ -18,7 +18,7 @@
             * [插件扩展和扩展点](basics/plugin_structure/plugin_extensions_and_extension_points.md)
             * [插件交互](basics/plugin_structure/plugin_actions.md)
             * [插件服务](basics/plugin_structure/plugin_services.md)
-            * [Plugin Configuration File](basics/plugin_structure/plugin_configuration_file.md)
+            * [插件配置文件](basics/plugin_structure/plugin_configuration_file.md)
             * [Plugin Dependencies](basics/plugin_structure/plugin_dependencies.md)
         * [Architectural Overview](basics/architectural_overview.md)
           * [General Threading Rules](basics/architectural_overview/general_threading_rules.md)
