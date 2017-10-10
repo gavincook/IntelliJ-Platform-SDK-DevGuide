@@ -2,13 +2,15 @@
 title: Architectural Overview
 ---
 
-This topic describes the architecture of the *IntelliJ Platform* from a plugin developer's point of view. It is organized in a task-based manner to answer specific questions like "what can I do with this object?", "how do I get to this object?" and so on.
+本章节从插件开发者的视角来剖析*IntelliJ平台*架构。内容以回答问题的形式来组织，比如“可以使用该对象做什么？”，“如何获得这个对象？”等等。
 
-The following subjects are covered:
+包含如下主题：
 
-* [General threading rules](architectural_overview/general_threading_rules.md)
-* [Virtual files](architectural_overview/virtual_file.md)
-* [Documents](architectural_overview/documents.md)
-* [PSI files](architectural_overview/psi_files.md)
-* [File view providers](architectural_overview/file_view_providers.md)
-* [Psi elements](architectural_overview/psi_elements.md)
+* [通用线程规则](architectural_overview/general_threading_rules.md)
+* [虚拟文件](architectural_overview/virtual_file.md)
+* [文档](architectural_overview/documents.md)
+* [PSI文件](architectural_overview/psi_files.md)
+* [文件视图提供器](architectural_overview/file_view_providers.md)
+* [Psi元素](architectural_overview/psi_elements.md)
+
+

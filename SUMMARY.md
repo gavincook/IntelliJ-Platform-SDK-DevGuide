@@ -20,7 +20,7 @@
             * [插件服务](basics/plugin_structure/plugin_services.md)
             * [插件配置文件](basics/plugin_structure/plugin_configuration_file.md)
             * [插件依赖](basics/plugin_structure/plugin_dependencies.md)
-        * [Architectural Overview](basics/architectural_overview.md)
+        * [架构概览](basics/architectural_overview.md)
           * [General Threading Rules](basics/architectural_overview/general_threading_rules.md)
           * [Virtual Files](basics/architectural_overview/virtual_file.md)
           * [Documents](basics/architectural_overview/documents.md)
